@@ -810,6 +810,13 @@ subrepo:branch() {
           o "Ignore $commit, it's not in the selected path"
           continue
         fi
+      else
+        local -i commit_to_ignore=0
+        git merge-base --is-ancestor $gitrepo_commit $refs_subrepo_fetch || commit_to_ignore=1
+        if (( $commit_to_ignore == 1 )); then
+          o "Ignore $gitrepo_commit, it's not an ancestor"
+          continue
+        fi
       fi
 
       # Remember the previous commit from the parent repo path
